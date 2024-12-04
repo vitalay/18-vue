@@ -1,26 +1,68 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+    <form class="card">
+      <h2>Работа с базой данных</h2>
+
+      <div class="form-control">
+        <label for="name"> Имя </label>
+        <input type="text" id="name" v-model.trim="name" placeholder="Введите имя">
+      </div>
+
+      <button class="btn-primary" :disabled="name.length === 0">Создать человека</button>
+
+    </form>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  data() {
+    return {
+      name: ''
+    }
+  } 
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: #6d5f5f;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+
+.form-control {
+  margin-bottom: 1rem;
+}
+
+.form-control.invalid input {
+  border-color: #d9534f;
+}
+
+.form-control small {
+  color: #d9534f;
+}
+
+.form-checkbox {
+  margin-bottom: 1rem;
+}
+
+.btn-primary {
+  background-color: #9e20009d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
 }
 </style>
