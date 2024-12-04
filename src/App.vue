@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style scoped>
-.container {
+ .container {
   max-width: 600px;
   margin: 0 auto;
 }
@@ -52,17 +52,13 @@ export default {
 .form-checkbox {
   margin-bottom: 1rem;
 }
-
 .btn-primary {
-  background-color: #9e20009d;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
+ 
+
+  }
+  
 
 .btn-primary:hover {
-  background-color: #0056b3;
-}
+  background-color: #3a3433;
+} 
 </style>
