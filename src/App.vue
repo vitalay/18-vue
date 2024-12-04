@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form class="card">
+    <form class="card" @submit.prevent="createPerson">
       <h2>Работа с базой данных</h2>
 
       <div class="form-control">
@@ -16,9 +16,29 @@
 
 <script>
 export default {
+
   data() {
     return {
       name: ''
+    }
+  },
+  methods: {
+   async  createPerson() {
+  
+    const response = await fetch('https://vue-90fbd-default-rtdb.firebaseio.com/people.json',  {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify( { 
+          firstName: this.name
+        })
+
+      })
+const firebasaData = await response.json()
+console.log(firebasaData) 
+this.name = ''
+
     }
   } 
 }
