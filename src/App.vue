@@ -31,6 +31,9 @@ export default {
       people: []
     }
   },
+  mounted() {
+    this.loadPeople()
+  },
   methods: {
     async loadPeople() {
       const {data} = await axios.get('https://vue-90fbd-default-rtdb.firebaseio.com/people.json')
@@ -56,8 +59,13 @@ export default {
         })
 
       })
-const firebasaData = await response.json()
-console.log(firebasaData) 
+const firebasaData = await response.json() 
+
+this.people.push({
+  firstName: this.name,
+  id: firebasaData.name
+})
+
 this.name = ''
 
     }
