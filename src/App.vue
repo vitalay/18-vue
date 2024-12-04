@@ -10,19 +10,40 @@
 
       <button class="btn-primary" :disabled="name.length === 0">Создать человека</button>
 
+      <app-people-list 
+      :people="people"
+      @load="loadPeople"
+      ></app-people-list>
+
     </form>
   </div>
 </template>
 
 <script>
+
+import AppPeopleList from './AppPeopleList.vue';
+import axios from 'axios';
 export default {
 
   data() {
     return {
-      name: ''
+      name: '',
+      people: []
     }
   },
   methods: {
+    async loadPeople() {
+      const {data} = await axios.get('https://vue-90fbd-default-rtdb.firebaseio.com/people.json')
+     const result = Object.keys(data).map(key => {
+  return {
+    id: key,
+   ...data[key]
+  }
+
+})
+  this.people =result
+
+    },
    async  createPerson() {
   
     const response = await fetch('https://vue-90fbd-default-rtdb.firebaseio.com/people.json',  {
@@ -40,6 +61,9 @@ console.log(firebasaData)
 this.name = ''
 
     }
+  },
+  components: {
+    AppPeopleList
   } 
 }
 </script>
