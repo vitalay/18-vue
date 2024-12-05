@@ -1,29 +1,46 @@
 <template>
-  <div v-if="people.length !== 0">
-    <div class="card inline" v-for="person in people" :key="person.id" >
-      <h3>{{ person.firstName }}</h3>
-      <button class="btn" @click="$emit('load')">удалить</button>
+    <div>
+      <div v-if="people.length === 0">Список пуст</div>
+      <div class="card" v-for="person in people" :key="person.id">
+        <h3>{{ person.firstName }}</h3>
+        <button class="btn-danger" @click="$emit('remove', person.id)">Удалить</button>
+      </div>
     </div>
-  </div>
-  <div class="card center" v-else>
-  <h4>Нет людей</h4>
-  <button class="btn" @click="$emit('load')">Загрузить список</button>
-  </div>
-</template>
-
-<script>
-export default {
-    emits: ['load'],
-  props: ['people'],
-};
-</script>
-
-<style scoped>
- 
- .inline {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
- }
- 
-</style>
+  </template>
+  
+  <script>
+  export default {
+    props: {
+      people: {
+        type: Array,
+        required: true,
+      },
+    },
+  };
+  </script>
+  
+  <style scoped>
+  .card {
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .btn-danger {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c0392b;
+  }
+  </style>
+  

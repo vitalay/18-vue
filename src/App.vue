@@ -4,80 +4,101 @@
       <h2>Работа с базой данных</h2>
 
       <div class="form-control">
-        <label for="name"> Имя </label>
-        <input type="text" id="name" v-model.trim="name" placeholder="Введите имя">
+        <label for="name">Имя</label>
+        <input
+          type="text"
+          id="name"
+          v-model.trim="name"
+          placeholder="Введите имя"
+        />
       </div>
 
-      <button class="btn-primary" :disabled="name.length === 0">Создать человека</button>
+      <button class="btn-primary" :disabled="name.length === 0">
+        Создать человека
+      </button>
 
-      <app-people-list 
-      :people="people"
-      @load="loadPeople"
+      <!-- Компонент списка -->
+      <app-people-list
+        :people="people"
+        @remove="removePerson"
       ></app-people-list>
-
     </form>
   </div>
 </template>
 
 <script>
+import AppPeopleList from "./AppPeopleList.vue";
+import axios from "axios";
 
-import AppPeopleList from './AppPeopleList.vue';
-import axios from 'axios';
 export default {
-
   data() {
     return {
-      name: '',
-      people: []
-    }
+      name: "",
+      people: [], // Список людей
+    };
   },
   mounted() {
-    this.loadPeople()
+    this.loadPeople();
   },
   methods: {
+    // Загрузка людей
     async loadPeople() {
-      const {data} = await axios.get('https://vue-90fbd-default-rtdb.firebaseio.com/people.json')
-     const result = Object.keys(data).map(key => {
-  return {
-    id: key,
-   ...data[key]
+  try {
+    const { data } = await axios.get('https://vue-90fbd-default-rtdb.firebaseio.com/people.json');
+    if (!data) return;
+
+    this.people = Object.values(data).map(person => ({
+      id: person.id,
+      firstName: person.firstName,
+    }));
+  } catch (error) {
+    console.error('Ошибка при загрузке данных:', error);
   }
+},
 
-})
-  this.people =result
 
-    },
-   async  createPerson() {
-  
-    const response = await fetch('https://vue-90fbd-default-rtdb.firebaseio.com/people.json',  {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify( { 
-          firstName: this.name
-        })
+    // Добавление нового человека
+    async createPerson() {
+  try {
+    const response = await axios.post('https://vue-90fbd-default-rtdb.firebaseio.com/people.json', {
+      firstName: this.name,
+    });
 
-      })
-const firebasaData = await response.json() 
+    // Добавить нового человека в список
+    this.people.push({
+      id: response.data.name, // ID из Firebase
+      firstName: this.name,
+    });
 
-this.people.push({
-  firstName: this.name,
-  id: firebasaData.name
-})
+    // Очистить поле ввода
+    this.name = '';
+  } catch (error) {
+    console.error('Ошибка при создании человека:', error);
+  }
+},
 
-this.name = ''
 
-    }
+    // Удаление человека
+    async removePerson(id) {
+  try {
+    // Сначала удаляем запись из базы данных
+    await axios.delete(`https://vue-90fbd-default-rtdb.firebaseio.com/people/${id}.json`);
+    
+    // Фильтруем список, удаляя элемент с указанным id
+    this.people = this.people.filter(person => person.id !== id);
+  } catch (error) {
+    console.error('Ошибка при удалении человека:', error);
+  }
+},
   },
   components: {
-    AppPeopleList
-  } 
-}
+    AppPeopleList,
+  },
+};
 </script>
 
 <style scoped>
- .container {
+.container {
   max-width: 600px;
   margin: 0 auto;
 }
@@ -105,12 +126,9 @@ this.name = ''
   margin-bottom: 1rem;
 }
 .btn-primary {
- 
-
-  }
-  
+}
 
 .btn-primary:hover {
   background-color: #3a3433;
-} 
+}
 </style>
